@@ -151,3 +151,36 @@ const addDepartment = () => {
       }))
   })
 }
+
+const addRole = () => {
+  inquirer.prompt([
+      {
+          type: 'list',
+          name: 'title',
+          message: 'Please select a title',
+          choices: ['Sales Manager', 'Sales Assistant', 'Sales Engineer',
+          'Marketing Manager', 'Marketing Coordinator', 'Marketing Analyst', 'Finance Manager', 
+          'Junior Accountant','Senior Accountant', 'HR Manager', 'HR Coordinator', 'Recruiter',
+           'Director', 'R&D Manager', 'R&D Associate', '"R&D Engineer', 'Purchases Manager',
+            'Buyer', 'Procurement Officer', 'Operations Manager', 'Operations Management Trainee',
+             'Operations Coordinator', 'Project Manager'],
+      },
+      {
+          type: "number",
+          name: "salary",
+          message: "Please enter salary info"
+      },
+      {
+          type: "list",
+          name: "department_id",
+          message: "Please enter a department ID",
+          choices: ["300", "301", "302", "303", "304", "305", "306", "307"],
+      },
+  ]).then((response) => {
+      connection.query("INSERT INTO roles (title, salary, department_id) values (?, ?, ?)", 
+      [response.title, response.salary, response.department_id], ((err, data) => {
+          console.table(data);
+      }))
+      appQuestions();
+  })
+}
