@@ -132,3 +132,22 @@ const addEmployee = () => {
       }))
   })
 }
+
+
+const addDepartment = () => {
+  inquirer.prompt([
+      {
+          type: 'list',
+          name: 'department',
+          message: 'Please select department',
+          choices: ["300", "301", "302", "303", "304", "305", "306", "307"],
+      }
+
+  ]).then((res) => {
+      connection.query('INSERT INTO department (name) VALUES (?)', [res.department], ((err, data) => {
+          if (err) throw err;
+          console.table("Added Successfully!");
+          appQuestions();
+      }))
+  })
+}
