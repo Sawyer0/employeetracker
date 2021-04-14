@@ -97,3 +97,38 @@ const viewRoles = () => {
       appQuestions();
   })
 }
+
+
+
+const addEmployee = () => {
+  inquirer.prompt([
+      {
+          type: "input",
+          name: "firstName",
+          message: "what is the employee's first name?"
+      },
+      {
+          type: "input",
+          name: "lastName",
+          message: "What is the employee's last name?",
+      },
+      {
+          type: "number",
+          name: "roleId",
+          message: "What is the roleId for this employee's role?"
+      },
+      {
+          type: "input",
+          name: "managerId",
+          message: "Please provide the managerId for this employee's manager",
+      }
+
+  ]).then((res) => {
+      connection.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)', 
+      [res.firstName, res.lastName, res.roleId, res.managerId], ((err, data) => {
+          if (err) throw err;
+          console.table("Added Successfully!");
+          appQuestions();
+      }))
+  })
+}
