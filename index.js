@@ -14,7 +14,7 @@ const connection = mysql.createConnection({
 
   // Be sure to update with your own MySQL password!
   password: "Scrappy1",
-  resbase: "employeetracker_db",
+  database: "employeetracker_db",
 });
 
 connection.connect((err) => {
@@ -43,9 +43,10 @@ const appQuestions = () => {
       name: "options",
     })
     .then((answers) => {
-      console.log(answers.options);
+      console.log("here", answers);
       switch (answers.options) {
         case "View all employees":
+          console.log("here");
           viewEmployees();
           break;
         case "View all departments":
@@ -83,9 +84,11 @@ console.log("Status check: What is our connection id?");
 
 const viewEmployees = () => {
   connection.query(
-    "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ” “, manager.last_name), AS manager FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id",
+    "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id",
     (err, res) => {
+      console.log("the erroe is",err);
       if (err) throw err;
+      console.log(res);
       console.table(res);
     }
   );
