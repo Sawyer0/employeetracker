@@ -1,28 +1,29 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 
-// create the connection information for the sql database
+
+// require("./employeeTrackerDBConnection");
 const connection = mysql.createConnection({
-    host: "localhost",
-  
-    // Your port; if not 3306
-    port: 3306,
-  
-    // Your username
-    user: "root",
-  
-    // Your password
-    password: "",
-    database: "employeeTracker_DB",
-  });
-  
-  connection.connect((err) => {
-    if (err) throw err;
-    console.log(`connected as id ${connection.threadId}`);
-    start();
-  });
-  
-const start = () => {
+  host: "localhost",
+
+  // Your port, if not 3306
+  port: 3306,
+
+  // Your username
+  user: "root",
+
+  // Be sure to update with your own MySQL password!
+  password: "Scrappy1",
+  resbase: "employeetracker_db",
+});
+
+connection.connect((err) => {
+  if (err) throw err;
+  console.log(`connected as id ${connection.threadId}`);
+  appQuestions();
+});
+
+const appQuestions = () => {
   inquirer
     .prompt({
       message: "What would you like to do?",
@@ -78,24 +79,32 @@ const start = () => {
     });
 };
 
+console.log("Status check: What is our connection id?");
+
 const viewEmployees = () => {
-  connection.query("SELECT * FROM employee", (err, data) => {
-    console.table(data);
-    start();
-  });
+  connection.query(
+    'SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name), AS manager FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id;
+
+
+    (err, res) => {
+      if (err) throw err;
+      console.table(res);
+    }
+  );
+  appQuestions();
 };
 
 const viewDepartments = () => {
-  connection.query("SELECT * FROM department", (err, data) => {
-    console.table(data);
-    start();
+  connection.query("SELECT * FROM department", (err, res) => {
+    console.table(res);
+    appQuestions();
   });
 };
 
 const viewRoles = () => {
-  connection.query("SELECT * FROM role", (err, data) => {
-    console.table(data);
-    start();
+  connection.query("SELECT * FROM role", (err, res) => {
+    console.table(res);
+    appQuestions();
   });
 };
 
@@ -127,10 +136,10 @@ const addEmployee = () => {
       connection.query(
         "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
         [res.firstName, res.lastName, res.roleId, res.managerId],
-        (err, data) => {
+        (err, res) => {
           if (err) throw err;
           console.table("Added Successfully!");
-          start();
+          appQuestions();
         }
       );
     });
@@ -150,10 +159,10 @@ const addDepartment = () => {
       connection.query(
         "INSERT INTO department (name) VALUES (?)",
         [res.department],
-        (err, data) => {
+        (err, res) => {
           if (err) throw err;
           console.table("Added Successfully!");
-          start();
+          appQuestions();
         }
       );
     });
@@ -208,11 +217,11 @@ const addRole = () => {
       connection.query(
         "INSERT INTO roles (title, salary, department_id) values (?, ?, ?)",
         [response.title, response.salary, response.department_id],
-        (err, data) => {
-          console.table(data);
+        (err, res) => {
+          console.table(res);
         }
       );
-      start();
+      appQuestions();
     });
 };
 
@@ -234,10 +243,10 @@ const updateRole = () => {
       connection.query(
         "UPDATE employee SET role_id = ? WHERE first_name = ? WHERE last_name =?",
         [response.role_id, response.name],
-        (err, data) => {
-          console.table(data);
+        (err, res) => {
+          console.table(res);
         }
       );
-      start();
+      appQuestions();
     });
 };
