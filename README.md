@@ -23,8 +23,8 @@ My motivation for this project was to provide a business with a way to manage it
 - User is able to add department roles and employees to the corresponding tables.
 - MySQL workbench is the database for this application.
 
-## Deployment
-[GitHub](https://github.com/Sawyer0/employeetracker)
+## Demo
+![App Gif](App.gif)
 
 ## Contributions
 This repo welcomes all forks and contributions.
